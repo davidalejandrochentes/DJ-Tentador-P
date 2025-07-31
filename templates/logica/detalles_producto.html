@@ -1,0 +1,146 @@
+{% extends "layout/base.html" %}
+{% load static %}
+
+{% block 'title' %}{{ producto.nombre }} - {{ producto.categoría.nombre }}{% endblock %}
+
+{% block 'content' %}
+<div class="container my-5">
+    <div class="card shadow border-0 bg-white rounded-4 overflow-hidden">
+        <div class="row g-0">
+            <div class="col-md-5">
+                {% if producto.imagen %}
+                    <img src="{{ producto.imagen.url }}" class="img-fluid h-100 object-fit-cover" alt="{{ producto.nombre }}">
+                {% else %}
+                    <img src="{% static 'img/default-product.jpg' %}" class="img-fluid h-100 object-fit-cover" alt="Sin imagen">
+                {% endif %}
+            </div>
+            <div class="col-md-7 p-4">
+                <h2 class="fw-bold">{{ producto.nombre }}</h2>
+                <a href="{% url 'productos_categoría' id=producto.categoría.id %}" class="btn btn-sm btn-outline-warning">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"/>
+                    </svg> Volver
+                </a>
+                <p class="text-muted mb-2 mt-2">
+                    {{ producto.descripción_corta|default:"Sin descripción corta." }}
+                </p>
+
+                <div class="mb-3">
+                    <span class="badge bg-{{ producto.disponible|yesno:'success,danger' }}">
+                        {{ producto.disponible|yesno:"Disponible,No disponible" }}
+                    </span>
+                    {% if producto.categoría %}
+                        <span class="badge bg-primary">{{ producto.categoría.nombre }}</span>
+                    {% endif %}
+                    <span class="badge bg-secondary">{{ producto.municipio.nombre }}</span>
+                </div>
+
+                <p class="mb-3">{{ producto.descripción|default:"Este producto no tiene una descripción detallada." }}</p>
+                
+                <div class="mb-3">
+                    <strong>Puntuación:</strong>
+                    {% for i in "12345" %}
+                        {% if forloop.counter <= producto.puntuación %}
+                            <span class="text-warning fs-5">★</span>
+                           {% else %}
+                               <span class="text-muted fs-5">☆</span>
+                           {% endif %}
+                       {% endfor %}
+                       <small class="text-muted ms-2">{{ producto.puntuación }}/5</small>
+                </div>
+   
+                <div class="d-grid gap-2 d-md-block">
+                    {% if not producto_en_carrito %}
+                    <form method="post" action="{% url 'agregar_al_carrito' producto_id=producto.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-danger btn px-4">Agregar al carrito</button>
+                    </form>
+                    {% else %}
+                    <button type="button" class="btn btn-outline-success btn px-4" disabled>
+                        Producto agregado
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if relacionados %}
+<div class="container my-5">
+    <h3 class="mb-4 fw-bold">Productos relacionados</h3>
+    <div class="position-relative">
+
+        <!-- Flechas de navegación -->
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>
+
+        <div class="swiper p-2">
+            <div class="swiper-wrapper">
+                {% for relacionado in relacionados %}
+                <div class="swiper-slide">
+                    <div class="card h-100 shadow-sm bg-white border-0 rounded-4 tarjeta-relacionado">
+                        <a href="{% url 'detalle_producto' relacionado.id %}" class="text-decoration-none text-dark">
+                            {% if relacionado.imagen %}
+                                <img src="{{ relacionado.imagen.url }}" class="card-img-top rounded-top-4" alt="{{ relacionado.nombre }}">
+                            {% else %}
+                                <img src="{% static 'img/default-product.jpg' %}" class="card-img-top rounded-top-4" alt="Sin imagen">
+                            {% endif %}
+                            <div class="card-body">
+                                <h6 class="fw-bold mb-1">{{ relacionado.nombre }}</h6>
+                                <p class="text-muted small mb-1">
+                                    {% for i in "12345" %}
+                                        {% if forloop.counter <= relacionado.puntuación %}
+                                            <span class="text-warning">★</span>
+                                        {% else %}
+                                            <span class="text-muted">☆</span>
+                                        {% endif %}
+                                    {% endfor %}
+                                </p>
+                                <p class="text-danger fw-semibold mb-0">${{ relacionado.precio|floatformat:2 }}</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+
+
+<div class="container my-5">
+    <h3 class="mb-3 fw-bold">Reseñas de clientes</h3>
+    <a href="{% url 'agregar_resena' producto.id %}" class="btn btn-outline-success btn px-4 mb-4">Agregar reseña</a>
+
+    {% if reseñas %}
+        {% for reseña in reseñas %}
+            <div class="card mb-3 border-0 shadow-sm bg-white rounded-4">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <h6 class="fw-bold mb-0">{{ reseña.usuario.get_full_name|default:reseña.usuario.username }}</h6>
+                        <small class="text-muted">{{ reseña.fecha|date:"d M Y - H:i" }}</small>
+                    </div>
+                    <div class="mb-2">
+                        {% for i in "12345" %}
+                            {% if forloop.counter <= reseña.puntuación %}
+                                <span class="text-warning">★</span>
+                            {% else %}
+                                <span class="text-muted">☆</span>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    <p class="mb-0">{{ reseña.comentario|default:"(Sin comentario)" }}</p>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="alert alert-info" role="alert">
+            Este producto aún no tiene reseñas. ¡Sé el primero en dejar una!
+        </div>
+    {% endif %}
+</div>
+
+{% endblock %}

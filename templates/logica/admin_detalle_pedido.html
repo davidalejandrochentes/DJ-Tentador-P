@@ -1,0 +1,149 @@
+{% extends "layout/base.html" %}
+{% load static %}
+
+{% block 'title' %}Detalle de Pedido - Administración{% endblock %}
+
+{% block 'content' %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card shadow border-0 rounded-4 p-4">
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4">
+                    <h2 class="fw-bold text-center text-md-start m-0 mb-2 mb-md-0">🛍️ Pedido #{{ pedido.id }} (Administración)</h2>
+                    <div class="d-flex align-items-center">
+                        <a href="{% url 'admin_historial_pedidos' %}" class="btn btn-sm btn-outline-warning">Volver</a>
+                    </div>
+                </div>
+                
+                <div class="alert {% if pedido.estado == 'pendiente' %}alert-warning{% elif pedido.estado == 'preparando' %}alert-secondary{% elif pedido.estado == 'en_camino' %}alert-info{% elif pedido.estado == 'entregado' %}alert-success{% else %}alert-danger{% endif %}">
+                    <strong>Estado:</strong> {{ pedido.get_estado_display }}
+                    
+                    <form method="post" action="{% url 'admin_cambiar_estado_pedido' pedido_id=pedido.id %}" class="mt-2">
+                        {% csrf_token %}
+                        <div class="input-group">
+                            <select name="estado" class="form-select form-select-sm">
+                                <option value="pendiente" {% if pedido.estado == 'pendiente' %}selected{% endif %}>Pendiente</option>
+                                <option value="preparando" {% if pedido.estado == 'preparando' %}selected{% endif %}>Preparando</option>
+                                <option value="en_camino" {% if pedido.estado == 'en_camino' %}selected{% endif %}>En Camino</option>
+                                <option value="entregado" {% if pedido.estado == 'entregado' %}selected{% endif %}>Entregado</option>
+                                <option value="cancelado" {% if pedido.estado == 'cancelado' %}selected{% endif %}>Cancelado</option>
+                            </select>
+                            <button type="submit" class="btn btn-sm btn-primary">Actualizar Estado</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="table-responsive d-none d-md-block">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Imagen</th>
+                                <th>Producto</th>
+                                <th>Cantidad</th>
+                                <th>Precio Unitario</th>
+                                <th>Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in pedido.items.all %}
+                            <tr>
+                                <td>
+                                    <img src="{{ item.producto.imagen.url }}" alt="{{ item.producto.nombre }}" class="img-fluid me-3 rounded" style="max-width: 60px; max-height: 60px; object-fit: cover;">
+                                </td>
+                                <td>
+                                    {{ item.producto.nombre }}
+                                    {% if item.producto.categoría %}
+                                    <small class="text-muted d-block">Categoría: {{ item.producto.categoría.nombre }}</small>
+                                    {% endif %}
+                                </td>
+                                <td>{{ item.cantidad }}</td>
+                                <td>${{ item.precio_unitario|floatformat:2 }}</td>
+                                <td>${{ item.subtotal|floatformat:2 }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3" class="text-end fw-bold">Subtotal:</td>
+                                <td class="fw-bold">${{ subtotal|floatformat:2 }}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" class="text-end fw-bold">Costo de Envío:</td>
+                                <td class="fw-bold">${{ pedido.costo_envio|floatformat:2 }}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" class="text-end fw-bold">Total:</td>
+                                <td class="fw-bold">${{ pedido.total|floatformat:2 }}</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                <div class="d-block d-md-none">
+                    {% for item in pedido.items.all %}
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ item.producto.nombre }}</h5>
+                            <img src="{{ item.producto.imagen.url }}" alt="{{ item.producto.nombre }}" class="img-fluid me-3 rounded" style="max-width: 60px; max-height: 60px; object-fit: cover;">
+                            {% if item.producto.categoría %}
+                            <p class="card-text text-muted">Categoría: {{ item.producto.categoría.nombre }}</p>
+                            {% endif %}
+                            <div class="row">
+                                <div class="col-6">
+                                    <strong>Cantidad:</strong> {{ item.cantidad }}
+                                </div>
+                                <div class="col-6">
+                                    <strong>Precio Unitario:</strong> ${{ item.precio_unitario|floatformat:2 }}
+                                </div>
+                                <div class="col-12 mt-2">
+                                    <strong>Subtotal:</strong> ${{ item.subtotal|floatformat:2 }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-8 text-end fw-bold">Subtotal:</div>
+                                <div class="col-4 fw-bold">${{ subtotal|floatformat:2 }}</div>
+                                <div class="col-8 text-end fw-bold">Costo de Envío:</div>
+                                <div class="col-4 fw-bold">${{ pedido.costo_envio|floatformat:2 }}</div>
+                                <div class="col-8 text-end fw-bold">Total:</div>
+                                <div class="col-4 fw-bold">${{ pedido.total|floatformat:2 }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card-footer bg-transparent">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>Detalles de Envío</h5>
+                            <p><strong>Dirección:</strong> {{ pedido.dirección_entrega }}</p>
+                            {% if pedido.usuario.zona %}
+                            <p><strong>Zona:</strong> {{ pedido.usuario.zona.nombre }}</p>
+                            {% endif %}
+                            {% if pedido.usuario.municipio %}
+                            <p><strong>Municipio:</strong> {{ pedido.usuario.municipio.nombre }}</p>
+                            {% endif %}
+                            {% if pedido.usuario.provincia %}
+                            <p><strong>Provincia:</strong> {{ pedido.usuario.provincia.nombre }}</p>
+                            {% endif %}
+                            <p><strong>Fecha de Pedido:</strong> {{ pedido.fecha|date:"d/m/Y" }}</p>
+                            <p><strong>Hora de Pedido:</strong> {{ pedido.fecha|date:"H:i" }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Información del Comprador</h5>
+                            <p><strong>Nombre:</strong> {{ pedido.usuario.get_full_name|default:pedido.usuario.username }}</p>
+                            <p><strong>Email:</strong> {{ pedido.usuario.email }}</p>
+                            <p><strong>Teléfono:</strong> {{ pedido.usuario.teléfono }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

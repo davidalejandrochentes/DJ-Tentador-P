@@ -1,0 +1,42 @@
+{% extends "layout/base.html" %}
+{% load static %}
+
+{% block 'title' %}Cambiar contraseña - Tentador{% endblock %}
+
+{% block 'content' %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow borde bg-white">
+                <div class="card-body">
+                    <h2 class="text-center text-danger fw-bold">🔐 Cambiar contraseña</h2>
+                    
+                    {% if password_actualizada %}
+                        <div class="alert alert-success">¡Contraseña actualizada correctamente!</div>
+                    {% endif %}
+
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+                        {% for field in password_form %}
+                            <div class="mb-3">
+                                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                                {{ field.errors }}
+                                {{ field }}
+                                {% if field.help_text %}
+                                    <small class="form-text text-muted">{{ field.help_text }}</small>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-warning">Cambiar contraseña</button>
+                        </div>
+                    </form>
+                    <div class="text-center mt-3">
+                        <a href="{% url 'perfil_usuario' %}" class="btn btn-outline-secondary btn-sm">Volver a mi perfil</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

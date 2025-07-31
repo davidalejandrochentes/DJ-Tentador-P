@@ -1,0 +1,90 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <meta name="description" content="Tentador: Tu tienda online de productos deliciosos. Explora una amplia variedad de categorías, compra fácilmente y disfruta de una experiencia de compra única.">
+        <meta name="keywords" content="tienda online, productos gourmet, compras web, alimentación, delivery, gastronomía">
+        <meta name="author" content="UPSO" />
+        <link rel="icon" href="{% static "images/TENTADOR.webp" %}" type="image/png" sizes="16x16">
+        <title>{% block 'title' %}{% endblock %}</title>
+        <link rel="stylesheet" href="{% static "css/Bootstrap.css" %}">
+        <link rel="stylesheet" href="{% static "css/swiper-bundle.css" %}">
+        <link rel="stylesheet" href="{% static "css/styles.css" %}">
+        {% block 'styles' %}{% endblock %}
+    </head>
+    <body class="">
+        
+        {% if user.is_authenticated %}
+            <nav class="navbar sticky-top rounded-bottom">
+                <div class="container">
+                    <a class="navbar-brand" href="{% url 'inicio' %}">
+                        <img src="{% static 'images/TENTADOR-hanburgesa.webp' %}" alt="Tentador Logo">
+                    </a>
+                    <a class="text-decoration-none" href="{% url 'perfil_usuario' %}">
+                        <svg class="mx-4" width="35px" height="35px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <circle cx="12" cy="6" r="4" stroke="#FBC02D" stroke-width="2.4"></circle> <path d="M19.9975 18C20 17.8358 20 17.669 20 17.5C20 15.0147 16.4183 13 12 13C7.58172 13 4 15.0147 4 17.5C4 19.9853 4 22 12 22C14.231 22 15.8398 21.8433 17 21.5634" stroke="#FBC02D" stroke-width="2.4" stroke-linecap="round"></path> </g></svg>
+                    </a>
+                    <a class="text-decoration-none" href="{% url 'historial_pedidos' %}">
+                        <svg fill="#FBC02D" width="35px" height="35px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512.001 512.001" xml:space="preserve" width="204px" height="204px" stroke="#FBC02D" stroke-width="7.168014000000001"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <g> <polygon points="87.766,0 87.766,80.017 119.773,80.017 119.773,64.013 103.769,64.013 103.769,16.003 455.846,16.003 455.846,64.013 439.843,64.013 439.843,80.017 471.849,80.017 471.849,0 "></polygon> </g> </g> <g> <g> <rect x="175.856" y="87.743" width="104.143" height="15.779"></rect> </g> </g> <g> <g> <rect x="175.856" y="120.354" width="24.195" height="15.779"></rect> </g> </g> <g> <g> <rect x="215.83" y="120.354" width="15.779" height="15.779"></rect> </g> </g> <g> <g> <rect x="240.025" y="120.354" width="15.779" height="15.779"></rect> </g> </g> <g> <g> <rect x="264.22" y="120.354" width="15.779" height="15.779"></rect> </g> </g> <g> <g> <rect x="175.856" y="160.328" width="208.287" height="15.779"></rect> </g> </g> <g> <g> <rect x="175.856" y="191.887" width="208.287" height="15.779"></rect> </g> </g> <g> <g> <rect x="175.856" y="224.497" width="208.287" height="15.779"></rect> </g> </g> <g> <g> <rect x="359.948" y="256.056" width="24.195" height="15.779"></rect> </g> </g> <g> <g> <rect x="359.948" y="288.666" width="24.195" height="15.779"></rect> </g> </g> <g> <g> <rect x="359.948" y="320.225" width="24.195" height="15.779"></rect> </g> </g> <g> <g> <rect x="87.492" y="296.03" width="168.312" height="15.779"></rect> </g> </g> <g> <g> <rect x="167.44" y="328.641" width="24.195" height="15.779"></rect> </g> </g> <g> <g> <rect x="207.415" y="328.641" width="48.39" height="15.779"></rect> </g> </g> <g> <g> <rect x="207.415" y="360.199" width="48.39" height="15.779"></rect> </g> </g> <g> <g> <rect x="167.44" y="360.199" width="24.195" height="15.779"></rect> </g> </g> <g> <g> <rect x="87.492" y="415.953" width="79.948" height="15.779"></rect> </g> </g> <g> <g> <rect x="240.025" y="415.953" width="15.779" height="15.779"></rect> </g> </g> <g> <g> <rect x="215.83" y="415.953" width="15.779" height="15.779"></rect> </g> </g> <g> <g> <rect x="191.635" y="415.953" width="15.779" height="15.779"></rect> </g> </g> <g> <g> <rect x="87.492" y="455.927" width="168.312" height="15.779"></rect> </g> </g> <g> <g> <path d="M416.076,416.203c-0.17,0-0.339,0.012-0.509,0.013l-103.991-0.262l-0.039,15.779l69.019,0.174 c-7.758,8.511-12.493,19.811-12.493,32.194c0,17.711-14.354,32.119-31.996,32.119c-0.072,0-0.142-0.005-0.214-0.005v-0.005h-0.229 c-17.371-0.241-31.43-14.547-31.43-32.108V288.062c0-9.036,6.931-16.116,15.779-16.116s15.779,7.079,15.779,16.116v56.012 c0,12.277,4.644,23.486,12.26,31.972l-36.442-0.067l-0.028,15.779c0,0,71.14,0.215,72.073,0.215 c26.392,0,47.864-21.487,47.864-47.898V47.77h8.416V31.991H120.101V47.77h7.674v200.283h16.003V47.77H415.7v296.305 c0,17.711-14.394,32.119-32.085,32.119c-0.595,0-1.187-0.019-1.775-0.052v-0.034l-0.45-0.001 c-16.657-1.149-29.861-15.072-29.861-32.033v-56.012c0-17.587-14.157-31.895-31.559-31.895v-0.11H71.762 c-17.43,0-31.61,14.357-31.61,32.006v176.039c0,12.794,4.933,24.767,13.89,33.714c8.952,8.942,20.93,13.867,33.714,13.867 l247.866,0.307c0.148,0.001,0.294,0.012,0.443,0.012c26.343,0,47.776-21.487,47.776-47.899c0-17.539,14.183-31.831,31.721-32.107 l0.353,0.001v-0.009c0.054,0,0.106-0.004,0.16-0.004c17.774,0,32.235,14.409,32.235,32.119v16.021H384.14v15.779h79.948v-31.801 C464.089,437.69,442.55,416.203,416.076,416.203z M87.766,495.902c-17.851,0-31.834-13.969-31.834-31.801V288.062 c0-8.947,7.102-16.226,15.831-16.226h221.055c-2.794,4.757-4.405,10.304-4.405,16.226v176.039 c0,12.322,4.655,23.568,12.287,32.065L87.766,495.902z"></path> </g> </g> </g></svg>
+                    </a>
+                    <a class="text-decoration-none" href="{% url 'ver_carrito' %}">
+                        <div class="position-relative">
+                            <svg class="mx-4" width="35px" height="35px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M3 3H4.37144C5.31982 3 6.13781 3.66607 6.32996 4.59479L8.67004 15.9052C8.86219 16.8339 9.68018 17.5 10.6286 17.5H17.5" stroke="#FBC02D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M6.82422 7H19.6743C20.3386 7 20.8183 7.6359 20.6358 8.27472L19.6217 11.8242C19.2537 13.1121 18.0765 14 16.7371 14H8.27734" stroke="#FBC02D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> <circle cx="16.5" cy="20.5" r="0.5" fill="#FBC02D" stroke="#FBC02D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></circle> <circle cx="0.5" cy="0.5" r="0.5" transform="matrix(1 0 0 -1 10 21)" fill="#FBC02D" stroke="#FBC02D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></circle> </g></svg>
+                            {% if carrito_cantidad > 0 %}
+                            <span class="position-absolute top-0 translate-middle badge rounded-pill bg-warning" style="left: calc(75% - 5px)">
+                                {{ carrito_cantidad }}
+                                <span class="visually-hidden">Productos en el carrito</span>
+                            </span>
+                            {% endif %}
+                        </div>
+                    </a>
+                </div>
+            </nav>
+        {% else %}
+            <nav class="navbar sticky-top rounded-bottom">
+                <div class="container">
+                    <a class="navbar-brand" href="{% url 'inicio' %}">
+                        <img src="{% static 'images/TENTADOR-hanburgesa.webp' %}" alt="Tentador Logo">
+                    </a>
+                    <div>
+                        <a class="text-decoration-none" href="{% url 'login' %}">
+                            <svg class="mx-4" width="35px" height="35px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#FBC02D"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M2.00098 11.999L16.001 11.999M16.001 11.999L12.501 8.99902M16.001 11.999L12.501 14.999" stroke="#FBC02D" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M9.00195 7C9.01406 4.82497 9.11051 3.64706 9.87889 2.87868C10.7576 2 12.1718 2 15.0002 2L16.0002 2C18.8286 2 20.2429 2 21.1215 2.87868C22.0002 3.75736 22.0002 5.17157 22.0002 8L22.0002 16C22.0002 18.8284 22.0002 20.2426 21.1215 21.1213C20.3531 21.8897 19.1752 21.9862 17 21.9983M9.00195 17C9.01406 19.175 9.11051 20.3529 9.87889 21.1213C10.5202 21.7626 11.4467 21.9359 13 21.9827" stroke="#FBC02D" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                        </a>
+                        <a class="text-decoration-none" href="{% url 'register' %}">
+                            <svg class="me-4" fill="#FBC02D" width="35px" height="35px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" stroke="#FBC02D" stroke-width="0.552"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M22,13v7a1,1,0,0,1-1,1H3a1,1,0,0,1-1-1V13a1,1,0,0,1,2,0v6H20V13a1,1,0,0,1,2,0ZM12,3a1,1,0,0,0-1,1V8H7a1,1,0,0,0,0,2h4v4a1,1,0,0,0,2,0V10h4a1,1,0,0,0,0-2H13V4A1,1,0,0,0,12,3Z"></path></g></svg>
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        {% endif %}    
+        
+        <main>
+            {% block 'content' %}{% endblock %}
+        </main>
+        
+        {% block 'scripts' %}{% endblock %}
+        <script src="{% static "js/Bootstrap.js" %}"></script>
+        <script src="{% static "js/swiper-bundle.js" %}"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                new Swiper('.swiper', {
+                    slidesPerView: 1.2,
+                    spaceBetween: 16,
+                    breakpoints: {
+                        576: { slidesPerView: 2.2 },
+                        768: { slidesPerView: 3 },
+                        992: { slidesPerView: 4 },
+                    },
+                    navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev',
+                    },
+                });
+            });
+        </script>
+
+    
+    </body>
+    </html>

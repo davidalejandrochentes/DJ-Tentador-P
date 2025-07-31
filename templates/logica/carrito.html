@@ -1,0 +1,271 @@
+{% extends "layout/base.html" %}
+{% load static %}
+
+{% block 'title' %}Mi Carrito - Tentador{% endblock %}
+
+{% block 'content' %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow border-0 rounded-4 p-4">
+                <h2 class="fw-bold text-center mb-4">🛒 Mi Carrito</h2>
+                
+                {% if carrito.items.all %}
+                    <div class="table-responsive d-none d-md-block">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Imagen</th>
+                                    <th>Producto</th>
+                                    <th>Cantidad</th>
+                                    <th>Precio</th>
+                                    <th>Subtotal</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in carrito.items.all %}
+                                <tr>
+                                    <td class="">
+                                        <img src="{{ item.producto.imagen.url }}" alt="{{ item.producto.nombre }}" class="img-fluid me-3 rounded" style="max-width: 60px; max-height: 60px; object-fit: cover;">
+                                    </td>
+                                    <td class="">
+                                        {{ item.producto.nombre }}
+                                    </td>
+                                    <td>
+                                        <form id="form-item-{{ item.id }}" method="post" action="{% url 'ver_carrito' %}" class="actualizar-cantidad-form">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="actualizar_cantidad" value="1">
+                                            <input type="hidden" name="item_id" value="{{ item.id }}">
+                                            <div class="input-group input-group-sm align-items-center">
+                                                <button type="button" class="btn btn-warning btn-sm cantidad-btn" data-action="decrease" data-item-id="{{ item.id }}">-</button>
+                                                <input type="number" name="cantidad" value="{{ item.cantidad }}" min="1" class="form-control form-control-sm text-center cantidad-input" style="max-width: 70px;" data-item-id="{{ item.id }}" readonly>
+                                                <button type="button" class="btn btn-warning btn-sm cantidad-btn" data-action="increase" data-item-id="{{ item.id }}">+</button>
+                                            </div>
+                                        </form>
+                                    </td>
+                                    <td>${{ item.producto.precio|floatformat:2 }}</td>
+                                    <td>${{ item.total|floatformat:2 }}</td>
+                                    <td>
+                                        <form method="post" action="{% url 'ver_carrito' %}">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="eliminar_item" value="1">
+                                            <input type="hidden" name="item_id" value="{{ item.id }}">
+                                            <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="3" class="text-end fw-bold">Total:</td>
+                                    <td class="fw-bold">${{ total|floatformat:2 }}</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3" class="text-end fw-bold">Costo de Envío:</td>
+                                    <td class="fw-bold">${{ costo_envio|floatformat:2 }}</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3" class="text-end fw-bold">Total con Envío:</td>
+                                    <td class="fw-bold">${{ total_con_envio|floatformat:2 }}</td>
+                                    <td></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+
+                    <div class="d-block d-md-none">
+                        {% for item in carrito.items.all %}
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <div class="d-flex align-items-center"> 
+                                        <h5 class="card-title mb-0">{{ item.producto.nombre }}</h5>
+                                    </div>
+                                    <form method="post" action="{% url 'ver_carrito' %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="eliminar_item" value="1">
+                                        <input type="hidden" name="item_id" value="{{ item.id }}">
+                                        <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                                    </form>
+                                </div>
+                                <div class="row g-2">
+                                    <div class="col-12">
+                                        <div class="d-flex justify-content-between">
+                                            <span class="fw-bold">Imagen:</span>
+                                            <img src="{{ item.producto.imagen.url }}" alt="{{ item.producto.nombre }}" class="img-fluid me-3 rounded" style="max-width: 60px; max-height: 60px; object-fit: cover;">
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="d-flex justify-content-between">
+                                            <span class="fw-bold">Precio:</span>
+                                            <span>${{ item.producto.precio|floatformat:2 }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="d-flex justify-content-between">
+                                            <span class="fw-bold">Subtotal:</span>
+                                            <span>${{ item.total|floatformat:2 }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <form id="form-item-mobile-{{ item.id }}" method="post" action="{% url 'ver_carrito' %}" class="actualizar-cantidad-form">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="actualizar_cantidad" value="1">
+                                            <input type="hidden" name="item_id" value="{{ item.id }}">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <span class="fw-bold me-2">Cantidad:</span>
+                                                <div class="input-group input-group-sm" style="max-width: 150px;">
+                                                    <button type="button" class="btn btn-warning btn-sm cantidad-btn" data-action="decrease" data-item-id="{{ item.id }}">-</button>
+                                                    <input type="number" name="cantidad" value="{{ item.cantidad }}" min="1" class="form-control form-control-sm text-center cantidad-input" data-item-id="{{ item.id }}" readonly>
+                                                    <button type="button" class="btn btn-warning btn-sm cantidad-btn" data-action="increase" data-item-id="{{ item.id }}">+</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row g-2">
+                                    <div class="col-12">
+                                        <div class="d-flex justify-content-between">
+                                            <span>Total:</span>
+                                            <span>${{ total|floatformat:2 }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="d-flex justify-content-between">
+                                            <span>Costo de Envío:</span>
+                                            <span>${{ costo_envio|floatformat:2 }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="d-flex justify-content-between fw-bold">
+                                            <span>Total con Envío:</span>
+                                            <span>${{ total_con_envio|floatformat:2 }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2 mt-3">
+                        <button type="button" class="btn btn btn-warning" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                            Continuar Compra
+                        </button>
+                        <!-- Modal -->
+                        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5 encabezado" id="staticBackdropLabel">Atención</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <h6 class="fw-bold mb-3">Antes de continuar con su compra, tenga en cuenta:</h6>
+                                        <ul class="list-unstyled">
+                                            <li class="mb-3">
+                                                <span class="fw-bold">Dirección de envío:</span>
+                                                <ul class="mt-1">
+                                                    <li>La orden se enviará a la dirección registrada en su perfil de usuario.</li>
+                                                    <li>Si desea enviarla a otra dirección, actualice sus datos de envío antes de continuar.</li>
+                                                </ul>
+                                            </li>
+                                            <li class="mb-3">
+                                                <span class="fw-bold">Cancelación de pedidos:</span>
+                                                <ul class="mt-1">
+                                                    <li>Una vez que su pedido esté en estado <span class="badge bg-info text-dark">En camino</span>, no podrá ser cancelado.</li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <span class="fw-bold">Seguimiento del pedido:</span>
+                                                <ul class="mt-1">
+                                                    <li>Puede seguir el estado de su pedido en la sección <a href="#" class="text-decoration-none">"Historial de Pedidos"</a>, con actualizaciones en tiempo real.</li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+                                        <a href="{% url 'crear_pedido' %}" class="btn btn-warning">Continuar Compra</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info text-center">
+                        Tu carrito está vacío. 
+                        <a href="{% url 'inicio' %}" class="alert-link">Explora nuestros productos</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block 'scripts' %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const cantidadInputs = document.querySelectorAll('.cantidad-input');
+    const cantidadBotones = document.querySelectorAll('.cantidad-btn');
+    
+    // Deshabilitar edición directa de inputs
+    cantidadInputs.forEach(input => {
+        input.setAttribute('readonly', true);
+        input.style.pointerEvents = 'none';
+    });
+
+    cantidadInputs.forEach(input => {
+        input.addEventListener('change', function() {
+            const itemId = this.getAttribute('data-item-id');
+            const form = document.getElementById(`form-item-${itemId}`) || document.getElementById(`form-item-mobile-${itemId}`);
+            
+            // Enviar el formulario automáticamente
+            form.submit();
+        });
+    });
+
+    cantidadBotones.forEach(boton => {
+        boton.addEventListener('click', function() {
+            const itemId = this.getAttribute('data-item-id');
+            const input = document.querySelector(`.cantidad-input[data-item-id="${itemId}"]`);
+            const action = this.getAttribute('data-action');
+            
+            let cantidad = parseInt(input.value);
+            
+            if (action === 'increase') {
+                cantidad += 1;
+            } else if (action === 'decrease' && cantidad > 1) {
+                cantidad -= 1;
+            }
+            
+            input.value = cantidad;
+            input.dispatchEvent(new Event('change'));
+        });
+    });
+});
+</script>
+
+<style>
+    /* Eliminar flechas de inputs numéricos */
+    input[type=number]::-webkit-inner-spin-button, 
+    input[type=number]::-webkit-outer-spin-button { 
+        -webkit-appearance: none; 
+        margin: 0; 
+    }
+    input[type=number] {
+        -moz-appearance: textfield;
+        appearance: textfield;
+    }
+</style>
+{% endblock %}

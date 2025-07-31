@@ -1,0 +1,70 @@
+{% extends "layout/base.html" %}
+{% load static %}
+
+{% block 'title' %}Productos categoría {{ productos.0.categoría.nombre }}{% endblock %}
+
+{% block 'content' %}
+<div class="container my-5">
+
+    <section class="hero-section position-relative rounded-4 overflow-hidden mb-5 shadow">
+        <div class="hero-overlay p-5 text-white text-center" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('{% static 'images/header.webp' %}') center/cover;">
+            <h1 class="text-center encabezado mb-2 text-uppercase">{{ productos.0.categoría.nombre }}</h1>
+            <a href="{% url 'inicio' %}" class="btn btn-sm btn-outline-warning">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"/>
+                </svg> Volver
+            </a>
+        </div>
+    </section>
+
+    {% if productos %}
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+            {% for producto in productos %}
+            <div class="col hover-card">
+                <div class="card h-100 shadow-sm bg-white border-0 rounded-4 tarjeta-relacionado">
+                    <a href="{% url 'detalle_producto' producto.id %}" class="text-decoration-none text-dark">
+                        {% if producto.imagen %}
+                            <img src="{{ producto.imagen.url }}" class="card-img-top rounded-top-4" alt="{{ producto.nombre }}">
+                        {% else %}
+                            <img src="{% static 'img/default-product.jpg' %}" class="card-img-top rounded-top-4" alt="Sin imagen">
+                        {% endif %}
+                        <div class="card-body">
+                            <h6 class="fw-bold mb-1">{{ producto.nombre }}</h6>
+                            <p class="text-muted small mb-1">{{ producto.descripción_corta|default:"(Sin descripción corta)" }}</p>
+                            <p class="text-warning small mb-2">
+                                {% for i in "12345" %}
+                                    {% if forloop.counter <= producto.puntuación %}
+                                        <span>★</span>
+                                    {% else %}
+                                        <span>☆</span>
+                                    {% endif %}
+                                {% endfor %}
+                            </p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="h6 text-danger mb-0">${{ producto.precio|floatformat:2 }}</span>
+                                <div>
+                                    <a href="{% url 'detalle_producto' producto.id %}" class="btn btn-outline-warning btn-sm me-2">Detalles</a>
+                                    {% if producto.id not in productos_en_carrito %}
+                                    <form method="post" action="{% url 'agregar_al_carrito' producto_id=producto.id %}" class="d-inline">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="categoria_id" value="{{ productos.0.categoría.id }}">
+                                        <button type="submit" class="btn btn-outline-danger btn-sm">Agregar</button>
+                                    </form>
+                                    {% else %}
+                                    <button type="button" class="btn btn-outline-success btn-sm" disabled>Agregado</button>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info text-center mt-4" role="alert">
+            Aún no hay productos disponibles en esta categoría.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

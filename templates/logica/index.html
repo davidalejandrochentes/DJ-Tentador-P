@@ -1,0 +1,206 @@
+{% extends "layout/base.html" %}
+{% load static %}
+
+{% block 'title' %}Tentador - Las Mejores Hamburguesas a Domicilio{% endblock %}
+
+{% block 'content' %}
+{% if user.is_authenticated %}
+
+<div class="container my-5">
+
+    <section class="hero-section position-relative rounded-4 overflow-hidden mb-5 shadow">
+        <div class="hero-overlay p-5 text-white" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('{% static 'images/header.webp' %}') center/cover;">
+            <h1 class="text-center encabezado text-uppercase">Categorías</h1>
+        </div>
+    </section>
+
+    {% if categorías %}
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-4 g-4 justify-content-center">
+            {% for categoría in categorías %}
+            <div class="col hover-card">
+                <a href="{% url 'productos_categoría' id=categoría.id %}" class="text-decoration-none text-dark">
+                    <div class="card h-100 shadow-sm bg-white border-0 rounded-4 tarjeta-relacionado">
+                        {% if categoría.imagen %}
+                            <img src="{{ categoría.imagen.url }}" class="card-img-top rounded-top-4" alt="{{ categoría.nombre }}">
+                        {% else %}
+                            <img src="{% static 'img/default-category.jpg' %}" class="card-img-top rounded-top-4" alt="Sin imagen">
+                        {% endif %}
+                        <div class="card-body text-center">
+                            <h5 class="fw-bold">{{ categoría.nombre }}</h5>
+                            <p class="text-muted small mb-0">{{ categoría.descripción|default:"(Sin descripción disponible)" }}</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info text-center mt-4" role="alert">
+            Aún no hay categorías disponibles.
+        </div>
+    {% endif %}
+</div>
+
+{% else %}
+
+<div class="container my-5">
+    <!-- Hero Section Mejorado -->
+    <section class="hero-section position-relative rounded-4 overflow-hidden mb-5 shadow">
+        <div class="hero-overlay p-4 p-md-5 text-white" style="background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('{% static 'images/header.webp' %}') center/cover;">
+            <div class="text-center">
+                <h2 class="display-4 fw-bold">Tu antojo tiene nombre:</h2>
+                <img src="{% static 'images/TENTADOR-logo.webp' %}" alt="Logo Tentador" class="img-fluid" style="max-width: 200px;">
+                <p class="lead mt-3 mb-4">Descubre nuestras hamburguesas artesanales, preparadas con ingredientes frescos y amor por la buena comida.</p>
+                <div class="d-flex gap-3 justify-content-center">
+                    <a href="#menu" class="btn btn-warning btn-lg">Ver Menú</a>
+                    <a href="{% url 'register' %}" class="btn btn-outline-light btn-lg">Registrarse</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mensaje de bienvenida -->
+    <section class="mb-5 p-4 rounded-4 shadow-sm bg-white hover-card">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-md-8 text-center">
+                <h2 class="fw-bold text-danger mb-3">¡Bienvenido a <span class="encabezado text-uppercase">Tentador</span>! 🍔🔥</h2>
+                <p class="mb-2">
+                    En <span class="encabezado text-uppercase">Tentador</span> no solo hacemos hamburguesas,
+                    <strong>¡creamos experiencias irresistibles!</strong> Cada bocado es una explosión de sabor preparada con pasión y frescura.
+                </p>
+                <p class="mb-2">
+                    Somos una empresa joven, innovadora y comprometida con la <strong>calidad</strong>,
+                    <strong>rapidez</strong> y ese <strong>toque único</strong> que te hará volver por más.
+                </p>
+                <ul class="list-unstyled mt-3">
+                    <li>📍 <strong>Ubicación:</strong> PR/PR/Villamil/Roberto Amaran #64</li>
+                    <li>📲 <strong>Síguenos:</strong> [Redes sociales, si aplica]</li>
+                    <li>⏰ <strong>Horario:</strong> 10:00am a 10:00pm</li>
+                </ul>
+                <p class="fw-bold text-danger mt-3">#<span class="encabezado text-uppercase">Tentador</span> es tu próximo antojo favorito 😋🍟</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Características Destacadas -->
+    <section class="features mb-5">
+        <div class="row g-4">
+            <div class="col-md-4 hover-card">
+                <div class="card h-100 border-0 shadow-sm rounded-4">
+                    <div class="card-body text-center p-4">
+                        <div class="feature-icon mb-3">🚀</div>
+                        <h3 class="h5 fw-bold">Entrega Rápida</h3>
+                        <p class="text-muted">Tu pedido en la puerta de tu casa en tiempo récord</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 hover-card">
+                <div class="card h-100 border-0 shadow-sm rounded-4">
+                    <div class="card-body text-center p-4">
+                        <div class="feature-icon mb-3">👨‍🍳</div>
+                        <h3 class="h5 fw-bold">Calidad Premium</h3>
+                        <p class="text-muted">Ingredientes frescos y recetas exclusivas</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 hover-card">
+                <div class="card h-100 border-0 shadow-sm rounded-4">
+                    <div class="card-body text-center p-4">
+                        <div class="feature-icon mb-3">💝</div>
+                        <h3 class="h5 fw-bold">Atención Personalizada</h3>
+                        <p class="text-muted">Servicio excepcional en cada pedido</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Menú Principal -->
+    <section id="menu" class="menu-section mb-5">
+        <div class="text-center mb-4">
+            <h2 class="display-6 fw-bold text-danger">Nuestro Menú 🍔</h2>
+            <p class="lead text-muted">Descubre algunos de nuestros productos</p>
+        </div>
+
+        {% if productos %}
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+                {% for producto in productos %}
+                <div class="col">
+                    <div class="card h-100 shadow-sm hover-card border-0 rounded-4">
+                        <div class="position-relative">
+                            {% if producto.imagen %}
+                                <img src="{{ producto.imagen.url }}" class="card-img-top rounded-top-4" alt="{{ producto.nombre }}" style="height: 200px; object-fit: cover;">
+                            {% else %}
+                                <img src="{% static 'img/default-product.jpg' %}" class="card-img-top rounded-top-4" alt="Sin imagen" style="height: 200px; object-fit: cover;">
+                            {% endif %}
+                            <div class="position-absolute top-0 end-0 m-2">
+                                <span class="badge bg-warning text-dark">${{ producto.precio|floatformat:2 }}</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="fw-bold mb-2">{{ producto.nombre }}</h5>
+                            <p class="text-muted small mb-2">{{ producto.descripción_corta|default:"(Sin descripción)" }}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="text-warning">
+                                    {% for i in "12345" %}
+                                        {% if forloop.counter <= producto.puntuación %}
+                                            <span>★</span>
+                                        {% else %}
+                                            <span>☆</span>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <div class="btn-group">
+                                    <a href="{% url 'detalle_producto_sin_log' producto.id %}" class="btn btn-outline-warning">Detalles</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-warning text-center" role="alert">
+                <p class="mb-0">¡Pronto tendremos nuevos productos disponibles! 🚀</p>
+            </div>
+        {% endif %}
+    </section>
+
+
+    <section class="mb-5 p-4 rounded-4 shadow-sm bg-white hover-card">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-md-8 text-center">
+                <h2 class="fw-bold text-danger mb-3">¡Lleva <span class="encabezado text-uppercase">Tentador</span> a tu ciudad! 🚀🍔</h2>
+                <p class="mb-3">
+                    ¿Vives en <span class="fw-bold text-danger">provincias o municipios</span> donde aún no está <span class="encabezado text-uppercase">Tentador</span> y quieres ser parte de nuestra expansión?  
+                    <strong>¡Te estamos buscando!</strong> Únete a nuestra red de franquicias y lleva nuestra experiencia gastronómica a nuevos lugares.
+                </p>
+                <p class="mb-3">
+                    Ofrecemos un <strong>modelo de negocio probado</strong>, formación integral y el respaldo de una marca que ya conquista paladares. 
+                    Si tienes espíritu emprendedor y pasión por la gastronomía, <strong>¡hagamos equipo!</strong>
+                </p>
+                <ul class="list-unstyled mb-4">
+                    <li>✅ <strong>Ventajas exclusivas:</strong> Soporte operativo, marketing y recetas 100% <span class="encabezado text-uppercase">Tentador</span>.</li>
+                    <li>📍 <strong>Oportunidad única:</strong> Disponible solo para zonas sin presencia de nuestra marca.</li>
+                    <li>📩 <strong>Contáctanos:</strong> [correo/teléfono] o escríbenos por redes sociales.</li>
+                </ul>
+                <p class="fw-bold text-danger mb-0">¡Sé el próximo franquiciado de #<span class="encabezado text-uppercase">Tentador</span>! 🔥</p>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+<!-- Botón flotante de WhatsApp 
+<a href="#" class="whatsapp-float">
+    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-whatsapp" viewBox="0 0 16 16">
+        <path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232"/>
+    </svg>
+</a>
+-->
+
+{% endif %}
+
+{% endblock %}
+
+
